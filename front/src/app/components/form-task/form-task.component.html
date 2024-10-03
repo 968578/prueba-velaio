@@ -1,0 +1,108 @@
+<div class="border shadow border-light-subtle rounded-1 mt-2 p-2">
+  <section class="mt-3 mb-3">
+    <form [formGroup]="userForm" (ngSubmit)="addUser()">
+      <div class="row px-2 mb-2">
+        <lbl-primary-c [value]="'Nombre Completo:'" />
+        <input  class="form-control" type="text" placeholder="Escribe nombre aqui.." formControlName="name">
+        <div class="m-0" *ngIf="submittedUser && userForm.controls['name'].errors">
+          <error-form *ngIf="userForm.controls['name'].errors['required']" [error]="'Es requerido'" />
+        </div>
+        <div class="m-0" *ngIf="submittedUser && userForm.controls['name'].errors">
+          <error-form *ngIf="userForm.controls['name'].errors['minlength']" [error]="'Mínimo 5 Caracteres'" />
+        </div>
+        <div class="m-0" *ngIf="submittedUser && alreadyName">
+          <error-form [error]="'Ya existe'" />
+        </div>
+      </div>
+      <div class="row px-2 mb-2">
+        <lbl-primary-c [value]="'Edad:'" />
+        <input class="form-control" type="text" placeholder="Escribe la edad aqui.." formControlName="age">
+        <div class="m-0" *ngIf="submittedUser && userForm.controls['age'].errors">
+          <error-form *ngIf="userForm.controls['age'].errors['required']" [error]="'Es requerido'" />
+        </div>
+        <div class="m-0" *ngIf="submittedUser && userForm.controls['age'].errors">
+          <error-form *ngIf="userForm.controls['age'].errors['min']" [error]="'Debe ser mayor a 17'" />
+        </div>
+        <div class="m-0" *ngIf="submittedUser && userForm.controls['age'].errors">
+          <error-form *ngIf="userForm.controls['age'].errors['pattern']" [error]="'Debe ser entero'" />
+        </div>
+      </div>
+      <div class="px-2 mb-2 d-flex flex-wrap justify-start-between">
+        <div class="me-3 mt-1 h-auto w-auto d-flex justify-content-evenly align-items-center px-2 rounded-1 border "
+          *ngFor="let skill of fSkills.controls; let i = index">
+          <p class="m-0">{{skill.value}}</p>
+          <p title="Eliminar" (click)="deleteSkill(i)" role="button" class="m-0 ms-3 text-danger fw-bolder cu">X</p>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <lbl-primary-c [value]="'Habilidades:'" />
+        <div class="m-0" *ngIf="submittedUser && userForm.controls['skills'].errors">
+          <error-form *ngIf="userForm.controls['skills'].errors['required']" [error]="'Mínimo una habilidad'" />
+        </div>
+        <div class="row text-center">
+          <div class="col-md-9">
+            <input #skill class="form-control " type="text" placeholder="Escribe la habilidad aqui..">
+          </div>
+          <div class="col-md-3">
+            <div class="row row-cols-2">
+              <div>
+                <button type="button" (click)="addSkill()" class="btn btn-secondary">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-secondary">+ Persona</button>
+    </form>
+  </section>
+  <section>
+    <form [formGroup]="taskForm" class="card shadow-lg container py-2" (ngSubmit)="submitTask()">
+      <h4>Crear Tarea</h4>
+      <section>
+        <div class="row px-2 mb-2">
+          <lbl-primary-c [value]="'Titulo:'" />
+          <input formControlName="title" class="form-control " type="text" placeholder="Escribe titulo aqui..">
+          <div class="m-0" *ngIf="submittedTask && fTask['title'].errors">
+            <error-form *ngIf="fTask['title'].errors['required']" [error]="'Es requerido'" />
+          </div>
+        </div>
+        <div class="row px-2 mb-2">
+          <lbl-primary-c [value]="'Fecha:'" />
+          <input formControlName="date" class="form-control " type="date">
+          <div class="m-0" *ngIf="submittedTask && fTask['date'].errors">
+            <error-form *ngIf="fTask['date'].errors['required']" [error]="'Es requerido'" />
+          </div>
+        </div>
+      </section>
+      <p class="fw-bolder m-0">Responsables</p>
+      <div class="m-0" *ngIf="submittedTask && fTask['users'].errors">
+        <error-form *ngIf="fTask['users'].errors['required']" [error]="'Mínimo un responsable'" />
+      </div>
+      <section style="height: 100px;" class="overflow-auto">
+        <div class="bg-body-secondary  rounded-1 d-flex justify-content-between mb-2"
+          *ngFor="let user of fUsers.controls; let i = index">
+          <div class="ms-1 d-flex justify-content-between w-100">
+            <p class="mb-0">{{user.value.name }} </p>
+            <p class="mb-0">|</p>
+            <p class="mb-0">{{user.value.age }} </p>
+            <p class="mb-0">|</p>
+            <p class="mb-0" role="button" [title]="user.value.skills | json ">{{user.value.skills.length }} </p>
+          </div>
+          <p (click)="deleteUser(i)" title="Eliminar" role="button" class="m-0 mx-3 text-danger fw-bolder ">X</p>
+        </div>
+      </section>
+      <button type="submit" class="btn btn-primary">
+        Guardar
+      </button>
+    </form>
+  </section>
+  <div style="height: 130px;" class="p-0 container position-absolute top-0">
+    <div>
+      <p class="fw-bolder m-0">Formulario Usuario</p>
+      {{userForm.value | json}}
+
+      <p class="fw-bolder m-0">Formulario Tareas</p>
+      {{taskForm.value | json}}
+    </div>
+  </div>
+</div>
